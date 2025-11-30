@@ -3,555 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bee Image Ruler - Measurement Tool</title>
+    <title>Bee Ruler - Debug Version</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            max-width: 1200px;
-            width: 100%;
-            padding: 30px;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 24px;
-        }
-
-        .subtitle {
-            color: #666;
-            margin-bottom: 25px;
-            font-size: 14px;
-        }
-
-        .section {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .section:last-child {
-            border-bottom: none;
-        }
-
-        .section-title {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: flex-end;
-        }
-
-        .form-group {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        input[type="file"],
-        input[type="number"],
-        button {
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            font-family: inherit;
-        }
-
-        input[type="file"] {
-            padding: 8px;
-            cursor: pointer;
-        }
-
-        input[type="number"] {
-            width: 100%;
-        }
-
-        button {
-            padding: 10px 20px;
-            background: #667eea;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background 0.3s;
-            white-space: nowrap;
-        }
-
-        button:hover {
-            background: #5568d3;
-        }
-
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .button-group button {
-            flex: 1;
-            min-width: 120px;
-        }
-
-        .info-box {
-            background: #f0f4ff;
-            border-left: 4px solid #667eea;
-            padding: 12px 15px;
-            border-radius: 4px;
-            margin: 15px 0;
-            font-size: 13px;
-            color: #555;
-        }
-
-        .calibration-status {
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-size: 13px;
-            margin: 10px 0;
-        }
-
-        .calibration-status.uncalibrated {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-
-        .calibration-status.calibrated {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .measurement-display {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin: 15px 0;
-        }
-
-        .measurement-box {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            flex: 1;
-            min-width: 150px;
-        }
-
-        .measurement-box h3 {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .measurement-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .canvas-container {
-            position: relative;
-            margin: 20px 0;
-            display: inline-block;
-            max-width: 100%;
-        }
-
-        canvas {
-            display: block;
-            max-width: 100%;
-            height: auto;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            cursor: crosshair;
-            background: #f9f9f9;
-        }
-
-        .tool-selector {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .tool-button {
-            padding: 10px 15px;
-            border: 2px solid #ddd;
-            background: white;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .tool-button.active {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-
-        .tool-button:hover {
-            border-color: #667eea;
-        }
-
-        .points-display {
-            font-size: 12px;
-            color: #666;
-            margin: 10px 0;
-        }
-
-        .point-info {
-            background: #f0f4ff;
-            padding: 8px 12px;
-            border-radius: 4px;
-            margin: 3px 0;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .error {
-            color: #dc3545;
-            font-size: 13px;
-            margin-top: 8px;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 20px;
-            }
-
-            .controls {
-                flex-direction: column;
-            }
-
-            .form-group {
-                min-width: 100%;
-            }
-
-            .button-group button {
-                width: 100%;
-            }
-        }
+        body { font-family: Arial; padding: 20px; max-width: 800px; margin: 0 auto; }
+        canvas { border: 2px solid black; max-width: 100%; display: block; margin: 20px 0; }
+        input, button { padding: 10px; margin: 10px 0; font-size: 16px; }
+        .message { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🐝 Bee Image Ruler Tool</h1>
-        <p class="subtitle">Measure bee images with calibration using any reference object of known size</p>
+    <h1>🐝 Bee Image Ruler - Test Version</h1>
+    
+    <div>
+        <label>Upload Image (JPG or PNG):</label><br>
+        <input type="file" id="imageFile" accept="image/*">
+    </div>
 
-        <!-- Image Upload Section -->
-        <div class="section">
-            <div class="section-title">Step 1: Upload Image</div>
-            <div class="controls">
-                <div class="form-group">
-                    <label for="imageInput">Select Image File</label>
-                    <input type="file" id="imageInput" accept="image/*">
-                </div>
-            </div>
-            <div class="info-box">
-                💡 Upload a photo of your bee specimen. For best results, include a bank card in the frame for calibration.
-            </div>
-        </div>
+    <div id="messages"></div>
 
-        <!-- Calibration Section -->
-        <div class="section">
-            <div class="section-title">Step 2: Calibrate Ruler</div>
-            <div id="calibrationStatus" class="calibration-status uncalibrated">
-                ⚠️ Not calibrated - Please calibrate using a reference object in your image
-            </div>
+    <canvas id="canvas"></canvas>
 
-            <div class="info-box">
-                Click on two points in your image that mark the edges of a reference object (bank card, ruler, coin, petri dish, etc.), then enter the actual size of that object below.
-            </div>
+    <div>
+        <p><strong>Instructions:</strong></p>
+        <ol>
+            <li>Upload a JPG or PNG image</li>
+            <li>The image should appear on the canvas below</li>
+            <li>Click two points on a reference object (ruler, card, etc.)</li>
+            <li>Enter the actual size and unit</li>
+            <li>Click "Apply Calibration"</li>
+        </ol>
+    </div>
 
-            <div class="tool-selector">
-                <button class="tool-button active" data-tool="calibrate">
-                    📏 Calibrate (2-point)
-                </button>
-                <button class="tool-button" data-tool="measure">
-                    📐 Measure (2-point)
-                </button>
-            </div>
-
-            <div id="calibrationDisplay" class="hidden">
-                <div class="points-display">
-                    <div id="calibrationPoints"></div>
-                </div>
-                <div class="controls" style="margin-top: 15px;">
-                    <div class="form-group">
-                        <label for="referenceSize">Actual Size of Reference Object</label>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="number" id="referenceSize" placeholder="Enter size" step="0.01" min="0">
-                            <select id="referenceUnit" style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
-                                <option value="mm">mm</option>
-                                <option value="cm">cm</option>
-                                <option value="inches">inches</option>
-                            </select>
-                            <button id="applyCalibration" style="padding: 10px 20px;">Apply Calibration</button>
-                        </div>
-                    </div>
-                </div>
-                <button id="resetCalibration" style="margin-top: 10px; padding: 8px 15px; font-size: 13px;">Reset Calibration</button>
-            </div>
-        </div>
-
-        <!-- Measurement Section -->
-        <div class="section">
-            <div class="section-title">Step 3: Measure Bee</div>
-            <div class="info-box">
-                Click on two points in your image (the start and end of what you want to measure). The distance will be calculated in millimeters.
-            </div>
-
-            <div id="measurementDisplay" class="hidden">
-                <div class="points-display">
-                    <div id="measurementPoints"></div>
-                </div>
-            </div>
-
-            <div id="resultDisplay" class="measurement-display hidden">
-                <div class="measurement-box">
-                    <h3>Measurement</h3>
-                    <div class="measurement-value"><span id="resultMM">0</span> mm</div>
-                </div>
-                <div class="measurement-box">
-                    <h3>In Inches</h3>
-                    <div class="measurement-value"><span id="resultInch">0</span>"</div>
-                </div>
-            </div>
-
-            <div id="errorMessage" class="error"></div>
-        </div>
-
-        <!-- Canvas -->
-        <div id="canvasContainer" class="canvas-container hidden">
-            <canvas id="canvas"></canvas>
+    <div id="calibrationSection" style="display: none;">
+        <h3>Calibration</h3>
+        <p id="pointsInfo">Points clicked: 0/2</p>
+        
+        <div>
+            <label>Reference Object Size:</label><br>
+            <input type="number" id="size" placeholder="Enter size" step="0.01" min="0">
+            <select id="unit">
+                <option value="mm">mm</option>
+                <option value="cm">cm</option>
+                <option value="inches">inches</option>
+            </select>
+            <button onclick="applyCalibration()">Apply Calibration</button>
+            <button onclick="resetAll()">Reset</button>
         </div>
     </div>
 
     <script>
-        const imageInput = document.getElementById('imageInput');
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        const canvasContainer = document.getElementById('canvasContainer');
-        const calibrationStatus = document.getElementById('calibrationStatus');
-        const calibrationDisplay = document.getElementById('calibrationDisplay');
-        const measurementDisplay = document.getElementById('measurementDisplay');
-        const resultDisplay = document.getElementById('resultDisplay');
-        const errorMessage = document.getElementById('errorMessage');
-        const resetCalibrationBtn = document.getElementById('resetCalibration');
-        const applyCalibrationBtn = document.getElementById('applyCalibration');
-        const referenceSize = document.getElementById('referenceSize');
-        const referenceUnit = document.getElementById('referenceUnit');
-        const toolButtons = document.querySelectorAll('.tool-button');
+        const imageFile = document.getElementById('imageFile');
+        const messagesDiv = document.getElementById('messages');
+        const calibrationSection = document.getElementById('calibrationSection');
 
         let img = null;
-        let currentTool = 'calibrate';
-        let calibrationPoints = [];
-        let measurementPoints = [];
+        let points = [];
         let pixelsPerMM = null;
 
-        // Tool selection
-        toolButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                toolButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentTool = btn.dataset.tool;
-                clearError();
-                if (currentTool === 'calibrate') {
-                    calibrationPoints = [];
-                    updateCalibrationDisplay();
-                } else {
-                    measurementPoints = [];
-                    updateMeasurementDisplay();
-                }
-                redraw();
-            });
-        });
+        function addMessage(text, type = 'info') {
+            const msg = document.createElement('div');
+            msg.className = `message ${type}`;
+            msg.textContent = text;
+            messagesDiv.appendChild(msg);
+            setTimeout(() => msg.remove(), 5000);
+        }
 
-        // Image upload
-        imageInput.addEventListener('change', (e) => {
+        imageFile.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    img = new Image();
-                    img.onload = () => {
-                        resizeCanvas();
-                        canvasContainer.classList.remove('hidden');
-                        calibrationDisplay.classList.remove('hidden');
-                        measurementDisplay.classList.remove('hidden');
-                        // Reset calibration when new image is uploaded
-                        pixelsPerMM = null;
-                        calibrationPoints = [];
-                        measurementPoints = [];
-                        referenceSize.value = '';
-                        updateCalibrationStatus();
-                        updateCalibrationDisplay();
-                        updateMeasurementDisplay();
-                        redraw();
-                    };
-                    img.src = event.target.result;
+            addMessage(`File selected: ${file.name}`, 'info');
+            
+            if (!file) {
+                addMessage('No file selected', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            
+            reader.onload = (event) => {
+                addMessage('File read successfully, creating image...', 'info');
+                img = new Image();
+                
+                img.onload = () => {
+                    addMessage(`Image loaded! Size: ${img.width}x${img.height}px`, 'success');
+                    drawImage();
+                    calibrationSection.style.display = 'block';
                 };
-                reader.readAsDataURL(file);
-            }
+                
+                img.onerror = () => {
+                    addMessage('Error: Could not load image', 'error');
+                };
+                
+                img.src = event.target.result;
+            };
+            
+            reader.onerror = () => {
+                addMessage('Error: Could not read file', 'error');
+            };
+            
+            reader.readAsDataURL(file);
         });
 
-        // Canvas click handling
-        canvas.addEventListener('click', (e) => {
+        function drawImage() {
             if (!img) return;
-
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            // Scale coordinates to image space
-            const scaleX = img.width / canvas.width;
-            const scaleY = img.height / canvas.height;
-            const imgX = x * scaleX;
-            const imgY = y * scaleY;
-
-            if (currentTool === 'calibrate') {
-                if (calibrationPoints.length < 2) {
-                    calibrationPoints.push({x: imgX, y: imgY, canvasX: x, canvasY: y});
-                    updateCalibrationDisplay();
-                    redraw();
-                }
-            } else if (currentTool === 'measure') {
-                if (!pixelsPerMM) {
-                    showError('Please calibrate first using a reference object');
-                    return;
-                }
-                if (measurementPoints.length < 2) {
-                    measurementPoints.push({x: imgX, y: imgY, canvasX: x, canvasY: y});
-                    updateMeasurementDisplay();
-                    redraw();
-
-                    if (measurementPoints.length === 2) {
-                        calculateMeasurement();
-                    }
-                }
-            }
-        });
-
-        // Apply calibration with custom reference size
-        applyCalibrationBtn.addEventListener('click', () => {
-            if (calibrationPoints.length !== 2) {
-                showError('Please click on two points in the image first');
-                return;
-            }
             
-            const size = parseFloat(referenceSize.value);
-            if (isNaN(size) || size <= 0) {
-                showError('Please enter a valid size value');
-                return;
-            }
-
-            // Convert to mm
-            let sizeInMM = size;
-            if (referenceUnit.value === 'cm') {
-                sizeInMM = size * 10;
-            } else if (referenceUnit.value === 'inches') {
-                sizeInMM = size * 25.4;
-            }
-
-            const p1 = calibrationPoints[0];
-            const p2 = calibrationPoints[1];
-            const pixelDistance = Math.sqrt(
-                Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)
-            );
-            pixelsPerMM = pixelDistance / sizeInMM;
-            updateCalibrationStatus();
-            clearError();
-            
-            // Switch to measure tool automatically
-            document.querySelector('[data-tool="measure"]').click();
-        });
-
-        function calculateMeasurement() {
-            const p1 = measurementPoints[0];
-            const p2 = measurementPoints[1];
-            const pixelDistance = Math.sqrt(
-                Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)
-            );
-            const mm = pixelDistance / pixelsPerMM;
-            const inches = mm / 25.4;
-
-            document.getElementById('resultMM').textContent = mm.toFixed(2);
-            document.getElementById('resultInch').textContent = inches.toFixed(3);
-            resultDisplay.classList.remove('hidden');
-        }
-
-        function updateCalibrationStatus() {
-            if (pixelsPerMM) {
-                calibrationStatus.className = 'calibration-status calibrated';
-                calibrationStatus.innerHTML = `✅ Calibrated: 1 pixel = ${(1/pixelsPerMM).toFixed(3)} mm`;
-            } else {
-                calibrationStatus.className = 'calibration-status uncalibrated';
-                calibrationStatus.innerHTML = '⚠️ Not calibrated - Please calibrate using a reference object in your image';
-            }
-        }
-
-        function updateCalibrationDisplay() {
-            const pointsHTML = calibrationPoints.map((p, i) => 
-                `<div class="point-info">Point ${i + 1}: ${Math.round(p.x)}, ${Math.round(p.y)}</div>`
-            ).join('');
-            document.getElementById('calibrationPoints').innerHTML = pointsHTML || 'Click two points on your reference object';
-        }
-
-        function updateMeasurementDisplay() {
-            const pointsHTML = measurementPoints.map((p, i) => 
-                `<div class="point-info">Point ${i + 1}: ${Math.round(p.x)}, ${Math.round(p.y)}</div>`
-            ).join('');
-            document.getElementById('measurementPoints').innerHTML = pointsHTML || 'Click two points to measure';
-        }
-
-        function resizeCanvas() {
-            const maxWidth = Math.min(800, window.innerWidth - 40);
-            const maxHeight = 600;
-            
+            // Set canvas size
+            const maxWidth = 700;
             let width = img.width;
             let height = img.height;
             
@@ -560,99 +121,103 @@
                 width = maxWidth;
                 height = height * ratio;
             }
-            if (height > maxHeight) {
-                const ratio = maxHeight / height;
-                height = maxHeight;
-                width = width * ratio;
-            }
             
             canvas.width = width;
             canvas.height = height;
-            redraw();
+            
+            // Draw image
+            ctx.drawImage(img, 0, 0, width, height);
+            addMessage(`Canvas drawn: ${width}x${height}px`, 'success');
+            
+            // Draw points if any exist
+            drawPoints();
         }
 
-        function redraw() {
-            if (!img) return;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, canvas.width, 0, canvas.height, 0, 0, canvas.width, canvas.height);
-
-            // Draw calibration points and line
-            if (calibrationPoints.length > 0) {
-                calibrationPoints.forEach((p, i) => {
-                    ctx.fillStyle = '#ff6b6b';
-                    ctx.beginPath();
-                    ctx.arc(p.canvasX, p.canvasY, 6, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#fff';
-                    ctx.font = 'bold 12px sans-serif';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('C' + (i + 1), p.canvasX, p.canvasY + 3);
-                });
-                
-                if (calibrationPoints.length === 2) {
-                    ctx.strokeStyle = '#ff6b6b';
-                    ctx.lineWidth = 2;
-                    ctx.setLineDash([5, 5]);
-                    ctx.beginPath();
-                    ctx.moveTo(calibrationPoints[0].canvasX, calibrationPoints[0].canvasY);
-                    ctx.lineTo(calibrationPoints[1].canvasX, calibrationPoints[1].canvasY);
-                    ctx.stroke();
-                    ctx.setLineDash([]);
-                }
-            }
-
-            // Draw measurement points and line
-            if (measurementPoints.length > 0) {
-                measurementPoints.forEach((p, i) => {
-                    ctx.fillStyle = '#4ecdc4';
-                    ctx.beginPath();
-                    ctx.arc(p.canvasX, p.canvasY, 6, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#fff';
-                    ctx.font = 'bold 12px sans-serif';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('M' + (i + 1), p.canvasX, p.canvasY + 3);
-                });
-                
-                if (measurementPoints.length === 2) {
-                    ctx.strokeStyle = '#4ecdc4';
-                    ctx.lineWidth = 2;
-                    ctx.setLineDash([5, 5]);
-                    ctx.beginPath();
-                    ctx.moveTo(measurementPoints[0].canvasX, measurementPoints[0].canvasY);
-                    ctx.lineTo(measurementPoints[1].canvasX, measurementPoints[1].canvasY);
-                    ctx.stroke();
-                    ctx.setLineDash([]);
-                }
+        function drawPoints() {
+            points.forEach((p, i) => {
+                ctx.fillStyle = '#ff0000';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 14px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText((i + 1), p.x, p.y);
+            });
+            
+            if (points.length === 2) {
+                ctx.strokeStyle = '#ff0000';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(points[0].x, points[0].y);
+                ctx.lineTo(points[1].x, points[1].y);
+                ctx.stroke();
             }
         }
 
-        function showError(message) {
-            errorMessage.textContent = message;
+        canvas.addEventListener('click', (e) => {
+            if (!img) {
+                addMessage('Please upload an image first', 'error');
+                return;
+            }
+            
+            if (points.length >= 2) {
+                addMessage('Two points already selected. Click Reset to try again.', 'error');
+                return;
+            }
+            
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            points.push({x, y});
+            addMessage(`Point ${points.length} clicked at (${Math.round(x)}, ${Math.round(y)})`, 'success');
+            
+            document.getElementById('pointsInfo').textContent = `Points clicked: ${points.length}/2`;
+            drawImage();
+        });
+
+        function applyCalibration() {
+            if (points.length !== 2) {
+                addMessage('Please click exactly 2 points', 'error');
+                return;
+            }
+            
+            const size = parseFloat(document.getElementById('size').value);
+            const unit = document.getElementById('unit').value;
+            
+            if (!size || size <= 0) {
+                addMessage('Please enter a valid size', 'error');
+                return;
+            }
+            
+            let sizeInMM = size;
+            if (unit === 'cm') sizeInMM = size * 10;
+            else if (unit === 'inches') sizeInMM = size * 25.4;
+            
+            const p1 = points[0];
+            const p2 = points[1];
+            const distance = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+            
+            pixelsPerMM = distance / sizeInMM;
+            
+            addMessage(`✅ Calibrated! 1 pixel = ${(1/pixelsPerMM).toFixed(4)} mm`, 'success');
+            points = [];
+            document.getElementById('pointsInfo').textContent = 'Points clicked: 0/2';
         }
 
-        function clearError() {
-            errorMessage.textContent = '';
-        }
-
-        resetCalibrationBtn.addEventListener('click', () => {
+        function resetAll() {
+            img = null;
+            points = [];
             pixelsPerMM = null;
-            calibrationPoints = [];
-            measurementPoints = [];
-            referenceSize.value = '';
-            updateCalibrationStatus();
-            updateCalibrationDisplay();
-            updateMeasurementDisplay();
-            resultDisplay.classList.add('hidden');
-            redraw();
-        });
-
-        window.addEventListener('resize', () => {
-            if (img) {
-                resizeCanvas();
-            }
-        });
+            canvas.width = 0;
+            canvas.height = 0;
+            imageFile.value = '';
+            calibrationSection.style.display = 'none';
+            document.getElementById('size').value = '';
+            addMessage('Reset complete', 'info');
+        }
     </script>
 </body>
 </html>
